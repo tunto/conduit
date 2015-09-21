@@ -43,6 +43,9 @@ func OpenPort(port int, t *Tunnel) (*Port, error) {
 }
 
 func (p *Port) Forward(pack Packet) error {
+	p.mu.RLock()
+	defer p.mu.RUnlock()
+
 	conn, ok := p.connections[pack.ID]
 	if !ok {
 		return errors.New("[port] unknown destination id")
