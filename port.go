@@ -51,14 +51,14 @@ func (p *Port) Forward(pack Packet) error {
 }
 
 func (p *Port) Send(pack Packet) error {
+	if pack.Action == CloseConnection {
+		p.mu.Lock()
+		delete(p.connections, pack.ID)
+		p.mu.Unlock()
+	}
+
 	pack.Port = p.id
 	return p.tun.Send(pack)
-}
-
-func (p *Port) Close(id int) {
-	p.mu.Lock()
-	delete(p.connections, id)
-	p.mu.Unlock()
 }
 
 func (p *Port) Stop() {
@@ -85,7 +85,7 @@ func (p *Port) listen() {
 		p.connections[connID] = c
 		p.mu.Unlock()
 
-		go c.Serve(p)
+		go c.Serve(p.Send)
 		connID++
 	}
 }

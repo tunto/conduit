@@ -14,7 +14,7 @@ func NewConn(id int, c net.Conn) *conn {
 	return &conn{id, c}
 }
 
-func (c *conn) Serve(p *Port) {
+func (c *conn) Serve(f Forwarder) {
 	defer c.c.Close()
 
 	for {
@@ -23,16 +23,15 @@ func (c *conn) Serve(p *Port) {
 		n, err := c.c.Read(buf)
 		if err != nil {
 			log.Printf("[conn:%d] read error: %s", c.id, err)
-			p.Close(c.id)
+			f(Packet{Action: CloseConnection, ID: c.id})
 			return
 		}
 
 		pack := DataPacket(buf[:n])
 		pack.ID = c.id
 
-		if err := p.Send(pack); err != nil {
+		if err := f(pack); err != nil {
 			log.Printf("[conn:%d] port send error: %s", c.id, err)
-			p.Close(c.id)
 			return
 		}
 	}

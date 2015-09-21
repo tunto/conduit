@@ -7,6 +7,8 @@ const (
 	PortACK
 	Data
 	Disconnect
+
+	CloseConnection
 )
 
 var ConnectPacket = Packet{Action: Connect}
@@ -30,3 +32,5 @@ func PortReply(port int) Packet {
 		Port:   port,
 	}
 }
+
+type Forwarder func(Packet) error
