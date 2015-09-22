@@ -80,6 +80,10 @@ func (t *Tunnel) Read() (pack Packet, err error) {
 }
 
 func (t *Tunnel) Send(pack Packet) error {
+	if pack.Action == PICNIC {
+		panic("tunnel: packet sent with unset action type")
+	}
+
 	return t.Encode(pack)
 }
 

@@ -1,7 +1,8 @@
 package conduit
 
 const (
-	EOF = iota
+	PICNIC = iota
+
 	Connect
 	MakePort
 	PortACK
