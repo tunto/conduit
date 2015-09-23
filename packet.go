@@ -9,6 +9,8 @@ const (
 	Data
 	Disconnect
 
+	NewConnection
+
 	CloseConnection
 )
 

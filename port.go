@@ -88,6 +88,9 @@ func (p *Port) listen() {
 		p.connections[connID] = c
 		p.mu.Unlock()
 
+		pack := Packet{Action: NewConnection, ID: connID}
+		p.Send(pack)
+
 		go c.Serve(p.Send)
 		connID++
 	}

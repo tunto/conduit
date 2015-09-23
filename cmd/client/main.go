@@ -12,19 +12,15 @@ func main() {
 		panic(err)
 	}
 
-	if err := tun.Send(conduit.Packet{Action: conduit.MakePort}); err != nil {
+	srvman := conduit.NewServiceManager(tun)
+
+	port, err := srvman.AddService("localhost:8000")
+
+	if err != nil {
 		panic(err)
 	}
+	fmt.Println(port)
 
-	if err := tun.Send(conduit.Packet{Action: conduit.MakePort}); err != nil {
-		panic(err)
-	}
-
-	for {
-		pack, err := tun.Read()
-		if err != nil {
-			panic(err)
-		}
-		fmt.Printf("%s\n", pack)
-	}
+	// keep program alive
+	<-make(chan struct{})
 }

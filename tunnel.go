@@ -32,6 +32,7 @@ func NewTunnel(conn net.Conn) *Tunnel {
 	}
 }
 
+// TODO: this is server specific and should be moved somewhere else.
 func (t *Tunnel) Open() {
 	defer t.Close()
 
