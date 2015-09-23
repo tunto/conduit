@@ -38,6 +38,9 @@ func (c *conn) Serve(f Forwarder) {
 }
 
 func (c *conn) Write(p Packet) error {
+	if p.Action != Data {
+		panic("unimplemented action: endpoint recieved non-data packet")
+	}
 	_, err := c.c.Write(p.Data)
 	return err
 }
